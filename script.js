@@ -1,21 +1,38 @@
-// Calculator functionality
+const resultDisplay = document.getElementById('result');
 
-function add(x, y) {
-    return x + y;
+function appendNumber(number) {
+    if (number === '.' && resultDisplay.value.includes('.')) {
+        return;
+    }
+    resultDisplay.value += number;
 }
 
-function subtract(x, y) {
-    return x - y;
+function appendOperator(operator) {
+    const value = resultDisplay.value;
+    if (value && !isNaN(value[value.length - 1])) {
+        resultDisplay.value += operator;
+    }
 }
 
-function multiply(x, y) {
-    return x * y;
+function clearDisplay() {
+    resultDisplay.value = '';
 }
 
-function divide(x, y) {
-    if (y !== 0) {
-        return x / y;
-    } else {
-        return 'Error: Division by zero';
+function deleteLast() {
+    resultDisplay.value = resultDisplay.value.slice(0, -1);
+}
+
+function calculate() {
+    try {
+        const expression = resultDisplay.value;
+        if (expression) {
+            const result = Function('"use strict"; return (' + expression + ')')();
+            resultDisplay.value = result;
+        }
+    } catch (error) {
+        resultDisplay.value = 'Error';
+        setTimeout(() => {
+            clearDisplay();
+        }, 1500);
     }
 }
